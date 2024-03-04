@@ -13,24 +13,24 @@
         <button><img src="images/search.png"></button>
     </div>
     <div class="error">
-        <p>Invalid City Name</p>
+        <p>Invalid city name</p>
     </div>
     <div class="weather">
         <img src="images/rain.png" class="weather-icon">
-        <h1 class="temp">58°F</h1> 
-        <h2 class="city">West Lafayette</h2>
+        <h1 class="temp"></h1> 
+        <h2 class="city"></h2>
         <div class="details">
             <div class="col">
                 <img src="images/humidity.png">
                 <div>
-                    <p class="humidity">50%</p>
+                    <p class="humidity"></p>
                     <p>Humidity</p>
                 </div>
             </div>
             <div class="col">
                 <img src="images/wind.png">
                 <div>
-                    <p class="wind">15mph</p>
+                    <p class="wind"></p>
                     <p>Wind Speed</p>
                 </div>
             </div>
@@ -40,28 +40,39 @@
     
 <script>
 
+// Defined constants for the API key and URL
 const apiKey="4059e0b5acd090d97fd530f7cc1f4b6c";
 const apiUrl="https://api.openweathermap.org/data/2.5/weather?units=imperial&q=";
 
+// Select DOM 
 const searchBox = document.querySelector(".search input")
 const searchBtn = document.querySelector(".search button")
 const weatherIcon = document.querySelector(".weather-icon")
 
+
+// Async function to get weather data for a city
 async function checkWeather(city){
+
+    // Get weather data from OpenWeatherMap API
     const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
 
+    // Check if the city was misspelled or could not be found
     if(response.status == 404){
+        // Display error message
         document.querySelector(".error").style.display = "block";
         document.querySelector(".weather").style.display = "none";
     }
     else {
+        // Parse JSON data from response
         var data = await response.json();
 
+    // Update elements with weather information
     document.querySelector(".city").innerHTML = data.name;
     document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°F";
     document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
     document.querySelector(".wind").innerHTML = Math.round(data.wind.speed) + " mph";
 
+    // Set weather icon based on weather condition from JSON data
     if(data.weather[0].main == "Clouds"){
         weatherIcon.src = "images/clouds.png";
     }
@@ -78,18 +89,18 @@ async function checkWeather(city){
         weatherIcon.src = "images/mist.png";
     }
 
+    // Display weather information
     document.querySelector(".weather").style.display = "block";
     document.querySelector(".error").style.display = "none";
     }
 }
 
-
-
+// Event listener for search button
 searchBtn.addEventListener("click", ()=>{
+    // Call checkWeather function with the calue from search input
     checkWeather(searchBox.value);
 })
 
-checkWeather();
 </script>
 
 </body>
